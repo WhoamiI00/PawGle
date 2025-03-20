@@ -15,16 +15,16 @@ export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState(categories[0].id);
 
   return (
-    <div className="dark bg-gray-900 text-white min-h-screen">
+    <div className="dark bg-[--c3] text-white min-h-screen">
       <Navbar />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden pt-24">
         <Sidebar
           categories={categories}
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
         />
-        <main className="flex-1 overflow-y-auto p-6">
-          <h1 className="text-3xl font-bold mb-6 text-white">
+        <main className="flex-1 overflow-y-auto p-6 h-[82vh] scroll-smooth bg-[var(--background)] z-10">
+          <h1 className="text-3xl font-bold mb-6 text-[var(--secondaryColor)]">
             {categories.find((cat) => cat.id === selectedCategory)?.name} Images
           </h1>
           <ImageGrid category={selectedCategory} />

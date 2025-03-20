@@ -29,6 +29,7 @@ export default function EditPetForm() {
 
   useEffect(() => {
     setBackgroundHeight(window.innerHeight + 300);
+
     const storedPet = JSON.parse(localStorage.getItem("petEditData"));
     if (storedPet) {
       setPet(storedPet);
@@ -64,45 +65,51 @@ export default function EditPetForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("accessToken");
-  
+
     const formData = new FormData();
     formData.append("name", pet.name);
     formData.append("category", pet.category);
     formData.append("type", pet.type);
     formData.append("breed", pet.breed);
     formData.append("isPublic", pet.isPublic);
-  
+
     const additionalInfo = pet.additionalInfo.subNotes
       ? { ...pet.additionalInfo }
       : { ...pet.additionalInfo, subNotes: [] };
     formData.append("additionalInfo", JSON.stringify(additionalInfo));
-  
+
     if (pet.images.length > 0) {
       pet.images.forEach((image) => {
         formData.append("images", image);
       });
     }
-  
+
     try {
-      const deleteResponse = await fetch(`${BACKEND_API_PORT}/api/auth/pets/${pet.id}/delete/`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
+      const deleteResponse = await fetch(
+        `${BACKEND_API_PORT}/api/auth/pets/${pet.id}/delete/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       if (!deleteResponse.ok) {
         const text = await deleteResponse.text();
         console.error("Error deleting pet:", text);
       } else {
-        const postResponse = await fetch(`${BACKEND_API_PORT}/api/auth/pets/add/`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        });
-  
+        const postResponse = await fetch(
+          `${BACKEND_API_PORT}/api/auth/pets/add/`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          }
+        );
+
         if (!postResponse.ok) {
           const text = await postResponse.text();
           console.error("Error adding new pet:", text);
@@ -116,16 +123,16 @@ export default function EditPetForm() {
       console.error("Network Error:", error);
     }
   };
-  
+
   return (
     <>
-      <CirclesBackground height={window.innerHeight+200} />
-      <div className="min-h-screen bg-[#0b101a] flex flex-col justify-start">
+      <CirclesBackground height={backgroundHeight} />
+      <div className="min-h-screen bg-[var(--background)] flex flex-col justify-start">
         <Navbar />
-        <div className="flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-lg w-full bg-[#161b26] rounded-2xl shadow-2xl hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden transform transition-all hover:scale-105 duration-500 ease-in-out">
+        <div className="flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 mt-16">
+          <div className="max-w-lg w-full bg-[var(--background2)] rounded-2xl shadow-lg hover:shadow-xl overflow-hidden transform transition-all hover:scale-105 duration-500 ease-in-out">
             <div className="px-10 py-12">
-              <h1 className="text-center text-3xl font-extrabold text-[#fefefe] mb-6 tracking-tight hover:tracking-wide transition-all duration-300">
+              <h1 className="text-center text-3xl font-extrabold text-[var(--textColor)] mb-6 tracking-tight hover:tracking-wide transition-all duration-300">
                 Edit Pet Details
               </h1>
               <form
@@ -137,7 +144,7 @@ export default function EditPetForm() {
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-sm font-semibold text-[#9ea4b0] mb-1"
+                      className="block text-sm font-semibold text-[var(--textColor2)] mb-1"
                     >
                       Pet Name
                     </label>
@@ -147,7 +154,7 @@ export default function EditPetForm() {
                       name="name"
                       value={pet.name}
                       onChange={(e) => handleChange("name", e.target.value)}
-                      className="w-full p-3 border border-[#4f545c] rounded-lg bg-[#2b2f3a] text-[#fefefe] focus:border-[#3983fb] focus:ring-[#3983fb] outline-none transition duration-150 ease-in-out"
+                      className="w-full p-3 border border-[var(--secondaryColor2)] rounded-lg bg-[var(--backgroundColor)] text-[var(--textColor)] focus:border-[var(--primaryColor)] focus:ring-[var(--primaryColor)] outline-none transition duration-150 ease-in-out"
                       placeholder="Enter pet's name"
                       required
                     />
@@ -155,7 +162,7 @@ export default function EditPetForm() {
                   <div>
                     <label
                       htmlFor="category"
-                      className="block text-sm font-semibold text-[#9ea4b0] mb-1"
+                      className="block text-sm font-semibold text-[var(--textColor2)] mb-1"
                     >
                       Select Category
                     </label>
@@ -164,7 +171,7 @@ export default function EditPetForm() {
                       name="category"
                       value={pet.category}
                       onChange={(e) => handleChange("category", e.target.value)}
-                      className="w-full p-3 border border-[#4f545c] rounded-lg bg-[#2b2f3a] text-[#fefefe] focus:border-[#3983fb] focus:ring-[#3983fb] outline-none transition duration-150 ease-in-out"
+                      className="w-full p-3 border border-[var(--secondaryColor2)] rounded-lg bg-[var(--backgroundColor)] text-[var(--textColor)] focus:border-[var(--primaryColor)] focus:ring-[var(--primaryColor)] outline-none transition duration-150 ease-in-out"
                       required
                     >
                       <option value="">Select Category</option>
@@ -178,7 +185,7 @@ export default function EditPetForm() {
                   <div>
                     <label
                       htmlFor="type"
-                      className="block text-sm font-semibold text-[#9ea4b0] mb-1"
+                      className="block text-sm font-semibold text-[var(--textColor2)] mb-1"
                     >
                       Select Animal Type
                     </label>
@@ -187,7 +194,7 @@ export default function EditPetForm() {
                       name="type"
                       value={pet.type}
                       onChange={(e) => handleChange("type", e.target.value)}
-                      className="w-full p-3 border border-[#4f545c] rounded-lg bg-[#2b2f3a] text-[#fefefe] focus:border-[#3983fb] focus:ring-[#3983fb] outline-none transition duration-150 ease-in-out"
+                      className="w-full p-3 border border-[var(--secondaryColor2)] rounded-lg bg-[var(--backgroundColor)] text-[var(--textColor)] focus:border-[var(--primaryColor)] focus:ring-[var(--primaryColor)] outline-none transition duration-150 ease-in-out"
                       required
                     >
                       <option value="">Select Type</option>
@@ -202,7 +209,7 @@ export default function EditPetForm() {
                   <div>
                     <label
                       htmlFor="breed"
-                      className="block text-sm font-semibold text-[#9ea4b0] mb-1"
+                      className="block text-sm font-semibold text-[var(--textColor2)] mb-1"
                     >
                       Select Breed
                     </label>
@@ -211,7 +218,7 @@ export default function EditPetForm() {
                       name="breed"
                       value={pet.breed}
                       onChange={(e) => handleChange("breed", e.target.value)}
-                      className="w-full p-3 border border-[#4f545c] rounded-lg bg-[#2b2f3a] text-[#fefefe] focus:border-[#3983fb] focus:ring-[#3983fb] outline-none transition duration-150 ease-in-out"
+                      className="w-full p-3 border border-[var(--secondaryColor2)] rounded-lg bg-[var(--backgroundColor)] text-[var(--textColor)] focus:border-[var(--primaryColor)] focus:ring-[var(--primaryColor)] outline-none transition duration-150 ease-in-out"
                       required
                     >
                       <option value="">Select Breed</option>
@@ -227,7 +234,7 @@ export default function EditPetForm() {
                   <div>
                     <label
                       htmlFor="images"
-                      className="block text-sm font-semibold text-[#9ea4b0] mb-1"
+                      className="block text-sm font-semibold text-[var(--textColor2)] mb-1"
                     >
                       Upload Image
                     </label>
@@ -243,7 +250,7 @@ export default function EditPetForm() {
                       />
                       <label
                         htmlFor="images"
-                        className="flex items-center justify-center px-4 py-2 bg-[#3983fb] text-white font-bold rounded-lg cursor-pointer hover:bg-[#0b101a] hover:text-[#3983fb] hover:shadow-lg transition-all duration-300 ease-in-out"
+                        className="flex items-center justify-center px-4 py-2 bg-[var(--primaryColor)] text-[var(--textColor3)] font-bold rounded-lg cursor-pointer hover:bg-[var(--primary1)] hover:text-[var(--textColor3)] hover:shadow-lg transition-all duration-300 ease-in-out"
                       >
                         {pet.images.length > 0
                           ? `${pet.images.length} file(s) selected`
@@ -252,14 +259,14 @@ export default function EditPetForm() {
                     </div>
                     <div>
                       {pet.images.length > 0 && (
-                        <ul className="mt-2 text-[#9ea4b0]">
+                        <ul className="mt-2 text-[var(--textColor2)]">
                           {pet.images.map((image, index) => (
                             <li key={index} className="flex justify-between">
                               <span>{image.name}</span>
                               <button
                                 type="button"
                                 onClick={() => removeImage(image)}
-                                className="text-[#3983fb] hover:text-white"
+                                className="text-[var(--primaryColor)] hover:text-[var(--textColor3)]"
                               >
                                 Remove
                               </button>
@@ -273,7 +280,7 @@ export default function EditPetForm() {
                     <button
                       type="button"
                       onClick={() => setShowAdditionalInfo(!showAdditionalInfo)}
-                      className="w-full bg-[#3983fb] text-white p-3 rounded-lg font-bold hover:bg-[#0b101a] hover:text-[#3983fb] transition duration-300 ease-in-out"
+                      className="w-full bg-[var(--primaryColor)] text-[var(--textColor3)] p-3 rounded-lg font-bold hover:bg-[var(--primary1)] hover:text-[var(--textColor3)] transition duration-300 ease-in-out"
                     >
                       {showAdditionalInfo
                         ? "Hide Additional Info"
@@ -285,7 +292,7 @@ export default function EditPetForm() {
                       <div>
                         <label
                           htmlFor="weight"
-                          className="block text-sm font-semibold text-[#9ea4b0] mb-1"
+                          className="block text-sm font-semibold text-[var(--textColor2)] mb-1"
                         >
                           Weight
                         </label>
@@ -300,14 +307,14 @@ export default function EditPetForm() {
                               weight: e.target.value,
                             })
                           }
-                          className="w-full p-3 border border-[#4f545c] rounded-lg bg-[#2b2f3a] text-[#fefefe] focus:border-[#3983fb] focus:ring-[#3983fb] outline-none transition duration-150 ease-in-out"
+                          className="w-full p-3 border border-[var(--secondaryColor2)] rounded-lg bg-[var(--backgroundColor)] text-[var(--textColor)] focus:border-[var(--primaryColor)] focus:ring-[var(--primaryColor)] outline-none transition duration-150 ease-in-out"
                           placeholder="Enter pet's weight"
                         />
                       </div>
                       <div>
                         <label
                           htmlFor="height"
-                          className="block text-sm font-semibold text-[#9ea4b0] mb-1"
+                          className="block text-sm font-semibold text-[var(--textColor2)] mb-1"
                         >
                           Height
                         </label>
@@ -322,14 +329,14 @@ export default function EditPetForm() {
                               height: e.target.value,
                             })
                           }
-                          className="w-full p-3 border border-[#4f545c] rounded-lg bg-[#2b2f3a] text-[#fefefe] focus:border-[#3983fb] focus:ring-[#3983fb] outline-none transition duration-150 ease-in-out"
+                          className="w-full p-3 border border-[var(--secondaryColor2)] rounded-lg bg-[var(--backgroundColor)] text-[var(--textColor)] focus:border-[var(--primaryColor)] focus:ring-[var(--primaryColor)] outline-none transition duration-150 ease-in-out"
                           placeholder="Enter pet's height"
                         />
                       </div>
                       <div>
                         <label
                           htmlFor="subNote"
-                          className="block text-sm font-semibold text-[#9ea4b0] mb-1"
+                          className="block text-sm font-semibold text-[var(--textColor2)] mb-1"
                         >
                           Add Sub-Note
                         </label>
@@ -337,7 +344,7 @@ export default function EditPetForm() {
                           type="text"
                           id="subNote"
                           name="subNote"
-                          className="w-full p-3 border border-[#4f545c] rounded-lg bg-[#2b2f3a] text-[#fefefe] focus:border-[#3983fb] focus:ring-[#3983fb] outline-none transition duration-150 ease-in-out"
+                          className="w-full p-3 border border-[var(--secondaryColor2)] rounded-lg bg-[var(--backgroundColor)] text-[var(--textColor)] focus:border-[var(--primaryColor)] focus:ring-[var(--primaryColor)] outline-none transition duration-150 ease-in-out"
                           placeholder="Add a sub-note"
                           value={pet.subNote}
                           onChange={(e) =>
@@ -363,13 +370,13 @@ export default function EditPetForm() {
                               subNote: "",
                             });
                           }}
-                          className="w-full bg-[#3983fb] text-white p-3 rounded-lg font-bold hover:bg-[#0b101a] hover:text-[#3983fb] transition duration-300 ease-in-out"
+                          className="w-full bg-[var(--primaryColor)] text-[var(--textColor3)] p-3 rounded-lg font-bold hover:bg-[var(--primary1)] hover:text-[var(--textColor3)] transition duration-300 ease-in-out"
                         >
                           Add Sub-Note
                         </button>
                         <div>
                           {pet.additionalInfo.subNotes.length > 0 && (
-                            <ul className="text-[#9ea4b0] mt-2">
+                            <ul className="text-[var(--textColor2)] mt-2">
                               {pet.additionalInfo.subNotes.map(
                                 (note, index) => (
                                   <li key={index}>{note}</li>
@@ -384,7 +391,7 @@ export default function EditPetForm() {
                   <div>
                     <label
                       htmlFor="isPublic"
-                      className="block text-sm font-semibold text-[#9ea4b0] mb-1"
+                      className="block text-sm font-semibold text-[var(--textColor2)] mb-1"
                     >
                       Visibility
                     </label>
@@ -395,11 +402,11 @@ export default function EditPetForm() {
                         name="isPublic"
                         checked={pet.isPublic}
                         onChange={togglePublic}
-                        className="h-5 w-5 text-[#3983fb] border border-[#4f545c] rounded focus:ring-[#3983fb] transition duration-150 ease-in-out"
+                        className="h-5 w-5 text-[var(--primaryColor)] border border-[var(--secondaryColor2)] rounded focus:ring-[var(--primaryColor)] transition duration-150 ease-in-out"
                       />
                       <label
                         htmlFor="isPublic"
-                        className="ml-2 text-sm text-[#9ea4b0]"
+                        className="ml-2 text-sm text-[var(--textColor2)]"
                       >
                         Make photos public
                       </label>
@@ -408,7 +415,7 @@ export default function EditPetForm() {
                   <div>
                     <button
                       type="submit"
-                      className="w-full bg-[#3983fb] text-white p-3 rounded-lg font-bold hover:bg-[#0b101a] hover:text-[#3983fb] transition duration-300 ease-in-out"
+                      className="w-full bg-[var(--primaryColor)] text-[var(--textColor3)] p-3 rounded-lg font-bold hover:bg-[var(--primary1)] hover:text-[var(--textColor3)] transition duration-300 ease-in-out"
                     >
                       Submit Edits
                     </button>
@@ -418,8 +425,8 @@ export default function EditPetForm() {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </>
   );
 }

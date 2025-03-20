@@ -28,23 +28,28 @@ export function ImageGrid({ category }) {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
       {filteredPets.length > 0 ? (
         filteredPets.map((pet, index) => (
-          <Card key={index} className="overflow-hidden bg-gray-800 text-white">
+          <Card
+            key={index}
+            className="overflow-hidden bg-[var(--backgroundColor)] shadow-lg text-[var(--textColor)] border-none"
+          >
             <CardContent className="p-0">
               <Image
                 src={`${BACKEND_URL}/media/${pet.images[0]}`}
                 alt={pet.name}
                 width={300}
-                height={200}
-                className="w-full h-auto object-cover"
+                height={250}
+                className="w-full h-[250px] object-cover"
               />
             </CardContent>
           </Card>
         ))
       ) : (
-        <p className="text-center text-gray-400">No public pets available.</p>
+        <p className="text-center text-[var(--textColor)]">
+          No public pets available.
+        </p>
       )}
     </div>
   );

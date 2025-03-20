@@ -3,13 +3,18 @@ import axios from "axios";
 const apiUrl = "/choreo-apis/awbo/backend/rest-api-be2/v1.0";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/",
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_API_PORT || "http://localhost:8000/",
 });
 
 // Request interceptor to include the access token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken"); // Directly accessing the access token
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null;
+    // Directly accessing the access token
+    console.log("Adding Authorization Header:", token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -31,14 +36,17 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem("refreshToken"); // Directly accessing the refresh token
+        const refreshToken =
+          typeof window !== "undefined"
+            ? localStorage.getItem("refreshToken")
+            : null; // Directly accessing the refresh token
         if (!refreshToken) {
           return Promise.reject(error);
         }
 
         // Attempt to refresh the token
         const response = await axios.post(
-          "http://localhost:8000/api/token/refresh/",
+          `${process.env.NEXT_PUBLIC_BACKEND_API_PORT}/api/token/refresh/`,
           {
             refresh: refreshToken,
           }
