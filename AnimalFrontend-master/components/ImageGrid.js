@@ -1,9 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
-import { motion } from "framer-motion";
-import CirclesBackground from "@/components/background";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 

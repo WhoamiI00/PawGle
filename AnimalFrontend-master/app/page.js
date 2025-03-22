@@ -8,6 +8,8 @@ import {
   FaBars,
   FaTimes,
   FaUser,
+  FaMoon,
+  FaSun,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Footer from "@/components/footer";
@@ -22,6 +24,20 @@ const PawGle = () => {
   const [userInfoExists, setUserInfoExists] = useState(false);
   const [usersCount, setUsersCount] = useState(0);
   const [petsCount, setPetsCount] = useState(0);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    // Apply theme based on state
+    if (isDarkMode) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => !prev);
+  };
   useEffect(() => {
     const userInfo = localStorage.getItem("accessToken");
     setUserInfoExists(!!userInfo);
@@ -109,7 +125,18 @@ const PawGle = () => {
             </ul>
           </nav>
         </div>
-        <div className="hidden md:flex space-x-4">
+        <div className="hidden md:flex space-x-4 items-center">
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full bg-[var(--background2)] hover:bg-[var(--primaryColor)] transition duration-300"
+          >
+            {isDarkMode === false ? (
+              <FaMoon className="text-[var(--textColor)]" size={20} />
+            ) : (
+              <FaSun className="text-[var(--textColor)]" size={20} />
+            )}
+          </button>
           <button className="bg-[var(--primary1)] hover:bg-[var(--primary2)] text py-2 px-4 rounded-lg shadow-lg transition duration-200 transform hover:scale-105">
             <RiCustomerService2Fill className="text-2xl" />
           </button>
